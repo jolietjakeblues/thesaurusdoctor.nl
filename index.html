@@ -3,101 +3,138 @@
 <head>
   <meta charset="UTF-8">
   <title>ThesaurusDoctor – Time Stream Scan</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="style.css">
+  <!-- jsPDF voor PDF export -->
+  <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
   <script defer src="app.js"></script>
 </head>
 
 <body>
-
   <header class="header">
-    <img src="assets/tardis.png" class="tardis-icon" alt="TARDIS">
-    <div class="header-text">
-      <h1>ThesaurusDoctor</h1>
-      <p>Scan uw termenbron door tijd en ruimte</p>
+    <div class="header-inner">
+      <div class="brand">
+        <!-- Vervang dit plaatje later door uw eigen TARDIS logo -->
+        <div class="brand-logo">TARDIS</div>
+        <div class="brand-text">
+          <div class="brand-title">ThesaurusDoctor</div>
+          <div class="brand-subtitle">Scan uw termenbron door tijd en ruimte</div>
+        </div>
+      </div>
+      <div class="status-pill" id="statusPill">Nog geen scan</div>
     </div>
   </header>
 
-  <main>
+  <main class="main">
 
-    <!-- ANAMNESE -->
+    <!-- ANAMNESE / TARDIS INTAKE -->
     <section id="intake" class="panel">
-      <h2>TARDIS Intake</h2>
-      <p>De ThesaurusDoctor stemt de tijdlijn af op uw universum.</p>
+      <h2>TARDIS intake</h2>
+      <p class="panel-intro">
+        De ThesaurusDoctor stemt de tijdlijn af op uw universum. Vul in wat u weet over uw bron.
+      </p>
 
-      <label>Organisatie universum</label>
-      <select id="orgUniverse">
-        <option>Collectiestelsel</option>
-        <option>Publieksuniversum</option>
-        <option>Onderwijsstelsel</option>
-        <option>Overheidsstelsel</option>
-        <option>Archief of erfgoed</option>
-        <option>Ander universum</option>
-      </select>
+      <div class="form-row">
+        <label for="orgUniverse">Organisatie universum</label>
+        <select id="orgUniverse">
+          <option value="Collectiestelsel">Collectiestelsel (museum of depot)</option>
+          <option value="Publieksuniversum">Publieksuniversum (website of publiekscatalogus)</option>
+          <option value="Onderwijsstelsel">Onderwijsstelsel</option>
+          <option value="Overheidsstelsel">Overheidsstelsel</option>
+          <option value="Archief of erfgoed">Archief of erfgoeddomein</option>
+          <option value="Ander universum">Ander universum</option>
+        </select>
+      </div>
 
-      <label>Naam van de termenbron</label>
-      <input id="sourceName" type="text">
+      <div class="form-row">
+        <label for="sourceName">Naam van de termenbron</label>
+        <input id="sourceName" type="text" placeholder="Bijv. Culturele Thesaurus">
+      </div>
 
-      <label>Ouderdom van de tijdlijn</label>
-      <input id="sourceAge" type="text" placeholder="jaar of periode">
+      <div class="form-row">
+        <label for="sourceAge">Ouderdom van de tijdlijn</label>
+        <input id="sourceAge" type="text" placeholder="Bijv. sinds 2012">
+      </div>
 
-      <label>Regeneraties</label>
-      <select id="regens">
-        <option>Geen regeneraties</option>
-        <option>Enkele regeneraties</option>
-        <option>Meerdere regeneraties</option>
-        <option>Onbekend</option>
-      </select>
+      <div class="form-row">
+        <label for="regens">Regeneraties</label>
+        <select id="regens">
+          <option value="none">Geen regeneraties</option>
+          <option value="few">Enkele regeneraties</option>
+          <option value="many">Meerdere regeneraties</option>
+          <option value="unknown">Onbekend</option>
+        </select>
+      </div>
 
       <h3>Tijdlijn afwijkingen</h3>
-      <div id="symptoms">
-        <label><input type="checkbox" value="double">Dubbele tijdlijnen</label>
-        <label><input type="checkbox" value="lost-rel">Weggevallen relaties</label>
-        <label><input type="checkbox" value="outdated">Verouderde verschijningen</label>
-        <label><input type="checkbox" value="closed">Gesloten universum</label>
-        <label><input type="checkbox" value="vanish">Verdwenen termen</label>
-        <label><input type="checkbox" value="mutate">Spontane mutaties</label>
-        <label><input type="checkbox" value="overlap">Overlappende universa</label>
+      <p class="field-help">Welke afwijkingen herkent u in uw termenbron.</p>
+      <div class="checkbox-group">
+        <label><input type="checkbox" class="symptom" value="double"> Dubbele tijdlijnen (meerdere termen voor hetzelfde begrip)</label>
+        <label><input type="checkbox" class="symptom" value="lost-rel"> Weggevallen relaties (links verdwenen bij migraties)</label>
+        <label><input type="checkbox" class="symptom" value="outdated"> Verouderde verschijningen (termen passen niet meer bij deze tijd)</label>
+        <label><input type="checkbox" class="symptom" value="closed"> Gesloten universum (geen of weinig koppelingen met Termennetwerk of LOD)</label>
+        <label><input type="checkbox" class="symptom" value="vanish"> Verdwenen termen (de TARDIS ziet ze wel, gebruikers niet)</label>
+        <label><input type="checkbox" class="symptom" value="mutate"> Spontane mutaties (wijzigingen zonder beheerder of log)</label>
+        <label><input type="checkbox" class="symptom" value="overlap"> Overlappende universa (meerdere bronnen claimen hetzelfde domein)</label>
       </div>
 
       <h3>Villain patronen</h3>
-      <label><input type="checkbox" value="dalek">Dalek patroon</label>
-      <label><input type="checkbox" value="cyberman">Cyberman afwijking</label>
-      <label><input type="checkbox" value="angel">Weeping Angel effect</label>
-      <label><input type="checkbox" value="vashta">Vashta Nerada schaduw</label>
-      <label><input type="checkbox" value="silence">Silence moment</label>
+      <p class="field-help">Doctor Who metaforen, gekoppeld aan echte beheerproblemen.</p>
+      <div class="checkbox-group">
+        <label><input type="checkbox" class="villain" value="dalek"> Dalek patroon (te starre structuur)</label>
+        <label><input type="checkbox" class="villain" value="cyberman"> Cyberman afwijking (te veel upgrades, verlies van identiteit)</label>
+        <label><input type="checkbox" class="villain" value="angel"> Weeping Angel effect (wijzigingen in het donker, geen log)</label>
+        <label><input type="checkbox" class="villain" value="vashta"> Vashta Nerada schaduw (langzame kwaliteitsafname in de schaduw)</label>
+        <label><input type="checkbox" class="villain" value="silence"> Silence moment (terugkerende problemen die iedereen vergeet)</label>
+      </div>
 
-      <label>Andere afwijking</label>
-      <input id="otherSymptom" type="text">
+      <div class="form-row">
+        <label for="otherSymptom">Andere afwijking in uw universum</label>
+        <input id="otherSymptom" type="text" placeholder="Beschrijf een afwijking die niet in deze realiteit thuishoort">
+      </div>
 
-      <button id="scanBtn" class="primary">Scan de tijdlijn met de TARDIS</button>
+      <button id="scanBtn" class="btn primary">Scan de tijdlijn met de TARDIS</button>
     </section>
-
 
     <!-- DIAGNOSE -->
     <section id="diagnosis" class="panel hidden">
       <h2>Tijdlijnanalyse</h2>
-      <p id="diagnosisStatus"></p>
+      <p class="panel-intro">
+        De TARDIS heeft een snapshot gemaakt van uw termenbron.
+      </p>
 
-      <h3>Paradoxen</h3>
-      <ul id="paradoxList"></ul>
+      <div class="diagnose-block">
+        <div class="diagnose-label">Status van uw tijdlijn</div>
+        <div class="diagnose-value" id="diagnosisStatus">Nog geen scan uitgevoerd.</div>
+      </div>
 
-      <h3>Samenvatting</h3>
-      <p id="summary"></p>
+      <div class="diagnose-block">
+        <div class="diagnose-label">Gevonden paradoxen</div>
+        <ul id="paradoxList" class="bullet-list"></ul>
+      </div>
+
+      <div class="diagnose-block">
+        <div class="diagnose-label">Samenvatting</div>
+        <p id="summary" class="summary-text"></p>
+      </div>
     </section>
-
 
     <!-- ADVIES -->
     <section id="advice" class="panel hidden">
-      <h2>Sonic Screwdriver Actions</h2>
-      <div id="adviceList"></div>
+      <h2>Sonic Screwdriver actions</h2>
+      <p class="panel-intro">
+        Gerichte ingrepen om uw tijdlijn te stabiliseren en beter te verbinden met andere universa.
+      </p>
 
-      <button id="pdfBtn" class="secondary">Genereer Time Fix Rapport (PDF)</button>
+      <div id="adviceList" class="advice-list"></div>
+
+      <button id="pdfBtn" class="btn secondary">Genereer Time Fix rapport (PDF)</button>
     </section>
 
   </main>
 
-  <footer>
-    <p>ThesaurusDoctor – stabiliseert termen door tijd en ruimte.</p>
+  <footer class="footer">
+    <p>ThesaurusDoctor helpt u de tijdlijn van uw termenbron stabiel, begrijpelijk en verbonden te houden.</p>
   </footer>
 
 </body>
