@@ -1,5 +1,5 @@
 
-# ThesaurusDoctor – Time Stream Scan
+# ThesaurusDoctor - Time Stream Scan
 
 ThesaurusDoctor is een lichte webapp waarmee u de gezondheid van uw termenbron beoordeelt, in een thema geïnspireerd op Doctor Who. U scant uw thesaurus of taxonomie als een tijdlijn en krijgt een diagnose met concrete acties.
 
